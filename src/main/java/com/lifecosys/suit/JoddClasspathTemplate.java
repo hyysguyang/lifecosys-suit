@@ -17,16 +17,14 @@ import java.util.function.Consumer;
  */
 public class JoddClasspathTemplate extends ClasspathTemplate<Jerry> {
 
-    public static Consumer<Jerry> NOTHING=(doc)->{};
-
+    public static Consumer<Jerry> NOTHING = (doc) -> {};
 
     Logger logger() {
         return LoggerFactory.getLogger(this.getClass().getName());
     }
 
-
     public JoddClasspathTemplate(String templateName) {
-        this(templateName,NOTHING);
+        this(templateName, NOTHING);
     }
 
     public JoddClasspathTemplate(String templateName, Consumer<Jerry> transformer) {

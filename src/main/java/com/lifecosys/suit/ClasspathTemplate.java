@@ -25,7 +25,6 @@ public abstract class ClasspathTemplate<D> implements Template<D> {
         });
     }
 
-
     public ClasspathTemplate(String prefix, String suffix, String templateName, Consumer<D> transformer) {
         this(prefix, suffix, templateName, (doc) -> {
             transformer.accept(doc);
@@ -44,7 +43,6 @@ public abstract class ClasspathTemplate<D> implements Template<D> {
         this.transformer = transformer;
     }
 
-
     abstract Option<D> create(InputStream inputStream);
 
     public Option<D> template() {
@@ -57,4 +55,3 @@ public abstract class ClasspathTemplate<D> implements Template<D> {
     }
 
 }
-

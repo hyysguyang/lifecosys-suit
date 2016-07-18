@@ -6,7 +6,7 @@ import sbt._
   * @author <a href="mailto:Young.Gu@lifcosys.com">Young Gu</a>
   */
 object BuildSettings {
-  val VERSION = "0.1-SNAPSHOT"
+  val VERSION = "0.1"
 
   val lifecycle =
     addCommandAlias("install", ";scalariformFormat;compile;test") ++
@@ -18,39 +18,21 @@ object BuildSettings {
     organization := "com.lifecosys",
     organizationHomepage := Some(new URL("https://lifecosys.com")),
     description := "UI friendly template.",
-    licenses += ("Apache 2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
+    licenses +=("Apache-2.0", url("https://www.apache.org/licenses/LICENSE-2.0.html")),
     startYear := Some(2016),
     scalaVersion := "2.11.6",
-    credentials += Credentials(Path.userHome / ".ivy2" / ".credentials"),
+    credentials += Credentials(Path.userHome / ".bintray" / ".credentials"),
     javaOptions += s"-Xms128m -Xmx512m -source 1.8 -target 1.8 -Xlint",
     crossPaths := false,
     autoScalaLibrary := false
   )
 
-  import net.virtualvoid.sbt.graph.Plugin._
+  lazy val projectBuildSettings = basicSettings ++ formattingSettings
 
-  lazy val projectBuildSettings = basicSettings ++ formattingSettings ++ graphSettings ++
-    Seq(
-      publishMavenStyle := true
-    )
+  import com.lifecosys.sbt.JavaCodeFormatterPlugin.JavaCodeFormatterKeys._
 
-
-  import com.typesafe.sbt.SbtScalariform
-  import com.typesafe.sbt.SbtScalariform.ScalariformKeys
-
-  import scalariform.formatter.preferences._
-
-  val formattingSettings =
-    SbtScalariform.scalariformSettings ++ Seq(
-      ScalariformKeys.preferences := ScalariformKeys.preferences.value
-        .setPreference(AlignSingleLineCaseStatements, true)
-        .setPreference(DoubleIndentClassDeclaration, true)
-    )
-
-  lazy val noPublishing = seq(
-    publish :=(),
-    publishLocal :=()
+  val formattingSettings = List(
+    eclipseFormatterFile in javaCodeFormatter := Some(file("codingstyle/org.eclipse.jdt.core.prefs.properties"))
   )
-
 
 }

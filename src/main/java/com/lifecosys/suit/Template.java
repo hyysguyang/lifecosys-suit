@@ -11,17 +11,16 @@ public interface Template<D> {
 
     Option<D> template();
 
-    Function1<D,D> transformer();
+    Function1<D, D> transformer();
 
-    default  Option<D> render(){
+    default Option<D> render() {
         return template().map(transformer());
     }
 
     String toString(D doc);
 
-    default  String renderToString(){
+    default String renderToString() {
         return render().map(this::toString).getOrElse("");
     }
 
 }
-
