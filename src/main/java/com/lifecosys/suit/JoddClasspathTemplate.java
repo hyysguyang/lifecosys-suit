@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:hyysguyang@gmail.com">Young Gu</a>
@@ -17,7 +19,8 @@ import java.util.function.Consumer;
  */
 public class JoddClasspathTemplate extends ClasspathTemplate<Jerry> {
 
-    public static Consumer<Jerry> NOTHING = (doc) -> {};
+    public static Consumer<Jerry> NOTHING = (doc) -> {
+    };
 
     Logger logger() {
         return LoggerFactory.getLogger(this.getClass().getName());
@@ -61,6 +64,6 @@ public class JoddClasspathTemplate extends ClasspathTemplate<Jerry> {
             doc.$("[suit ^='--']").remove();
             return doc;
         };
-        return prototypeTransformer.andThen(transformer);
+        return prototypeTransformer.andThen(new FragmentTransformer(this::loadTemplate)).andThen(transformer);
     }
 }

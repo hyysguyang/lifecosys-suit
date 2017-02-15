@@ -1,6 +1,7 @@
 package com.lifecosys.suit;
 
 import jodd.jerry.Jerry;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
@@ -14,7 +15,6 @@ import static org.junit.Assert.*;
  * @author <a href="mailto:guyang@lansent.com">Young Gu</a>
  */
 public class TemplateTest {
-
 
     @Test
     public void testUpdateAttribute() throws Exception {
@@ -74,13 +74,12 @@ public class TemplateTest {
         assertEquals("inserted-name", jerry.$(".nav.nav-tabs .inserted").attr("name"));
     }
 
-
     @Test
     public void testComposedTransformer() throws Exception {
 
-        Consumer<Jerry> transformer1 = (match)-> match.$(".nav-tabs").attr("data-id", "1000000");
-        Consumer<Jerry> transformer2 = (match)-> match.$(".nav-tabs").attr("data-role", "dialog");
-        Consumer<Jerry> transformer3 = (match)-> match.$(".nav-tabs [role='tab']").attr("data-name", "main-tab");
+        Consumer<Jerry> transformer1 = (match) -> match.$(".nav-tabs").attr("data-id", "1000000");
+        Consumer<Jerry> transformer2 = (match) -> match.$(".nav-tabs").attr("data-role", "dialog");
+        Consumer<Jerry> transformer3 = (match) -> match.$(".nav-tabs [role='tab']").attr("data-name", "main-tab");
         Consumer<Jerry> transformer = transformer1.andThen(transformer2).andThen(transformer3);
 
         Template<Jerry> template = createTemplate(transformer);
@@ -98,12 +97,16 @@ public class TemplateTest {
         assertEquals(0, jerry.$(".prototype").size());
     }
 
-
+    @Test
+    public void testMergeFragment() throws Exception {
+        Template<Jerry> template = new JoddClasspathTemplate("/com/lifecosys/suit", "html", "fragments",JoddClasspathTemplate.NOTHING);
+        Jerry jerry = parse(template.renderToString());
+        assertEquals("Testing Header", jerry.$(".suit-header").text());
+    }
 
     private Template<Jerry> createTemplate(Consumer<Jerry> transformer) {
         return new JoddClasspathTemplate("/com/lifecosys/suit", "html", "simple", transformer);
     }
-
 
     private Jerry parse(String content) throws SAXException, IOException {
         return new Jerry.JerryParser().parse(content);

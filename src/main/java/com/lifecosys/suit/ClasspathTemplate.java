@@ -46,6 +46,10 @@ public abstract class ClasspathTemplate<D> implements Template<D> {
     abstract Option<D> create(InputStream inputStream);
 
     public Option<D> template() {
+        return loadTemplate(templateName);
+    }
+
+    protected Option<D> loadTemplate(String templateName) {
         String templateFile = String.format("%s/%s.%s", prefix, templateName, suffix);
         return Try.of(() -> getClass().getResourceAsStream(templateFile)).toOption().flatMap(this::create);
     }
