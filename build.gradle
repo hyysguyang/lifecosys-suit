@@ -1,0 +1,71 @@
+import com.lansent.gradle.scs.DependencyHelper
+
+plugins {
+    id "com.diffplug.gradle.spotless" version "3.0.0"
+    id "com.dorongold.task-tree" version "1.2.2"
+    id "com.jfrog.bintray" version "1.7.3"
+}
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+
+group = "com.lifecosys"
+version = "0.2-SNAPSHOT"
+description="Java UI friendly template."
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+new DependencyHelper(dependencies).addCoreDependencies();
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
+}
+
+bintray {
+    user = "hyysguyang"
+    key = "fbd8ef547bf1ba6dd31d11c4ffbba6b4391a4c6c"
+    publications = ['mavenJava']
+    pkg {
+        repo = 'maven'
+        name = 'lifecosys-suit'
+        userOrg = user
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/hyysguyang/lifecosys-suit.git'
+        labels = ['java', 'template']
+        publicDownloadNumbers = true
+    }
+}
+
+
+spotless {
+    java {
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+        eclipseFormatFile rootProject.file('src/eclipse/eclipse-formatter-settings.xml')
+
+        paddedCell()
+    }
+}
+
+
+
+

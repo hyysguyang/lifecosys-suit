@@ -12,6 +12,8 @@ logs
 classes
 target
 target-eclipse
+build
+.gradle
 
 # sbt specific
 dist/*
